@@ -1,0 +1,11 @@
+{
+  "name": "institut-medecine-diagnostique",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Landing page Institut de Médecine Diagnostique — candidatures + stockage CV",
+  "dependencies": {
+    "@vercel/blob": "2.4.0",
+    "resend": "6.12.4"
+  }
+}

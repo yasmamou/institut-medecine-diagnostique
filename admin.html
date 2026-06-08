@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Espace administration — Candidatures</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <style>
+    body { background: var(--bg-soft); }
+    .admin-wrap { max-width: 980px; margin: 0 auto; padding: 40px 24px 80px; }
+    .admin-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+    .admin-title { font-family: var(--font-serif); font-weight: 500; font-size: 28px; color: var(--navy-900); }
+    .admin-sub { color: var(--muted); font-size: 15px; margin-top: 4px; }
+    .admin-actions { display: flex; gap: 10px; }
+
+    /* Login */
+    .login-card { max-width: 400px; margin: 8vh auto 0; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 34px; box-shadow: var(--shadow-md); }
+    .login-card h1 { font-family: var(--font-serif); font-weight: 500; font-size: 24px; color: var(--navy-900); }
+    .login-card p { color: var(--muted); font-size: 14.5px; margin-top: 6px; margin-bottom: 22px; }
+    .login-card label { display: block; font-size: 14px; font-weight: 600; color: var(--navy-800); margin-bottom: 8px; }
+    .login-card input { width: 100%; padding: 13px 14px; border: 1px solid var(--line); border-radius: 10px; font-size: 16px; }
+    .login-card input:focus-visible { border-color: var(--blue-500); box-shadow: var(--ring); outline: none; }
+    .login-error { color: var(--danger); font-size: 13.5px; margin-top: 10px; min-height: 18px; }
+
+    /* Tableau */
+    .cand-list { display: grid; gap: 14px; }
+    .cand-card { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; box-shadow: var(--shadow-sm); }
+    .cand-name { font-size: 17px; font-weight: 600; color: var(--navy-900); }
+    .cand-prof { display: inline-block; margin-left: 10px; font-size: 12.5px; font-weight: 600; color: var(--blue-600); background: var(--blue-50); padding: 3px 10px; border-radius: 999px; vertical-align: middle; }
+    .cand-meta { margin-top: 8px; color: var(--muted); font-size: 14px; display: flex; flex-wrap: wrap; gap: 6px 18px; }
+    .cand-meta a { color: var(--navy-700); }
+    .cand-date { color: #9aa7ba; font-size: 12.5px; margin-top: 6px; }
+    .cand-card .btn { white-space: nowrap; }
+    .empty, .loading { text-align: center; color: var(--muted); padding: 60px 0; }
+    .count-pill { font-size: 13px; font-weight: 600; color: var(--navy-700); background: #fff; border: 1px solid var(--line); padding: 6px 14px; border-radius: 999px; }
+    @media (max-width: 560px) { .cand-card { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <!-- ===== Vue connexion ===== -->
+  <div id="login-view" hidden>
+    <form class="login-card" id="login-form">
+      <h1>Espace administration</h1>
+      <p>Consultation des candidatures reçues.</p>
+      <label for="password">Mot de passe</label>
+      <input type="password" id="password" autocomplete="current-password" required />
+      <p class="login-error" id="login-error" role="alert"></p>
+      <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
+    </form>
+  </div>
+
+  <!-- ===== Vue tableau de bord ===== -->
+  <div id="dash-view" class="admin-wrap" hidden>
+    <div class="admin-head">
+      <div>
+        <div class="admin-title">Candidatures</div>
+        <div class="admin-sub">Institut de Médecine Diagnostique</div>
+      </div>
+      <div class="admin-actions">
+        <span class="count-pill" id="count-pill" hidden>0</span>
+        <button class="btn btn-ghost btn-sm" id="refresh-btn">Actualiser</button>
+        <button class="btn btn-ghost btn-sm" id="logout-btn">Déconnexion</button>
+      </div>
+    </div>
+
+    <div id="list-state" class="loading">Chargement…</div>
+    <div class="cand-list" id="cand-list"></div>
+  </div>
+
+  <script src="assets/js/admin.js"></script>
+</body>
+</html>

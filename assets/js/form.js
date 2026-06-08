@@ -11,7 +11,13 @@
 (function () {
   "use strict";
 
-  const { CV_CONFIG, SIMULATE_SUBMISSION, SUBMIT_ENDPOINT } = window.IMD_CONFIG;
+  const {
+    CV_CONFIG,
+    SIMULATE_SUBMISSION,
+    SUBMIT_ENDPOINT,
+    CV_UPLOAD_ENDPOINT,
+    BLOB_CLIENT_URL,
+  } = window.IMD_CONFIG;
 
   const form = document.getElementById("candidature-form");
   if (!form) return;
@@ -192,31 +198,41 @@
   });
 
   /* ---------------------------------------------------------------------------
-   * submitApplication — POINT DE BRANCHEMENT BACKEND
+   * submitApplication — soumission en deux temps
    * ---------------------------------------------------------------------------
-   * Reçoit un FormData (champs texte + fichier PDF) prêt à être transmis.
+   * 1) Le CV (PDF) est envoyé DIRECTEMENT du navigateur vers Vercel Blob via
+   *    le client officiel (jeton signé délivré par /api/cv-upload). Cela
+   *    contourne la limite de ~4,5 Mo du corps des fonctions serverless et
+   *    autorise des CV jusqu'à 20 Mo.
+   * 2) Les champs + l'URL du CV sont envoyés à /api/candidature, qui enregistre
+   *    la candidature (Vercel Blob) et envoie l'email de notification.
    *
-   * >>> POUR BRANCHER UN BACKEND RÉEL :
-   *     1. Passez SIMULATE_SUBMISSION = false dans assets/js/config.js
-   *     2. Ajustez SUBMIT_ENDPOINT (ex. webhook, route CRM, API).
-   *        En déploiement Vercel, /api/candidature pointe vers api/candidature.js,
-   *        où vous traiterez/forwarderez la candidature et le CV.
-   *
-   * Le FormData contient : prenom, nom, telephone, email, profession,
-   *   profession_autre (si applicable), ville, consent, cv (fichier PDF).
+   * >>> AUTRE BACKEND (webhook / CRM / API maison) :
+   *     remplacez le corps de cette fonction ; tout le reste du formulaire est
+   *     indépendant de l'implémentation d'envoi.
    *
    * Renvoie une Promise résolue en cas de succès, rejetée en cas d'erreur.
    * -------------------------------------------------------------------------*/
-  async function submitApplication(formData) {
+  async function submitApplication(payload, file) {
     if (SIMULATE_SUBMISSION) {
-      // MVP : succès simulé localement, aucune donnée n'est envoyée ni stockée.
+      // Démo hors ligne : aucune donnée n'est envoyée ni stockée.
       await new Promise((resolve) => setTimeout(resolve, 900));
       return { ok: true };
     }
 
+    // 1) Upload direct du CV vers Vercel Blob
+    const { upload } = await import(/* @vite-ignore */ BLOB_CLIENT_URL);
+    const blob = await upload(`candidatures/${file.name}`, file, {
+      access: "public",
+      handleUploadUrl: CV_UPLOAD_ENDPOINT,
+      contentType: "application/pdf",
+    });
+
+    // 2) Enregistrement des métadonnées + notification
     const response = await fetch(SUBMIT_ENDPOINT, {
       method: "POST",
-      body: formData, // multipart/form-data automatique (ne pas fixer Content-Type)
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...payload, cvUrl: blob.url, cvFilename: file.name }),
     });
     if (!response.ok) {
       throw new Error(`Échec de l'envoi (HTTP ${response.status})`);
@@ -231,22 +247,21 @@
     submitBtn.setAttribute("aria-busy", String(isLoading));
   }
 
-  function buildFormData() {
-    const fd = new FormData();
-    fd.append("prenom", form.prenom.value.trim());
-    fd.append("nom", form.nom.value.trim());
-    fd.append("telephone", form.telephone.value.trim());
-    fd.append("email", form.email.value.trim());
+  function buildPayload() {
     const profession =
       professionSelect.value === "Autre"
         ? autreInput.value.trim()
         : professionSelect.value;
-    fd.append("profession", profession);
-    fd.append("profession_categorie", professionSelect.value);
-    fd.append("ville", form.ville.value.trim());
-    fd.append("consent", form.consent.checked ? "true" : "false");
-    fd.append("cv", fileInput.files[0]);
-    return fd;
+    return {
+      prenom: form.prenom.value.trim(),
+      nom: form.nom.value.trim(),
+      telephone: form.telephone.value.trim(),
+      email: form.email.value.trim(),
+      profession: profession,
+      profession_categorie: professionSelect.value,
+      ville: form.ville.value.trim(),
+      consent: form.consent.checked,
+    };
   }
 
   form.addEventListener("submit", async function (e) {
@@ -263,7 +278,7 @@
 
     setLoading(true);
     try {
-      await submitApplication(buildFormData());
+      await submitApplication(buildPayload(), fileInput.files[0]);
       form.reset();
       autreField.hidden = true;
       refreshFileUI();

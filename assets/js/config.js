@@ -16,15 +16,19 @@ const CV_CONFIG = {
 };
 
 /* Mode de soumission.
- * - true  : aucune requête réseau, succès simulé localement (MVP / démo).
- * - false : envoi réel vers SUBMIT_ENDPOINT (voir assets/js/form.js).
+ * - true  : aucune requête réseau, succès simulé localement (démo hors ligne).
+ * - false : envoi réel — upload du CV vers Vercel Blob puis enregistrement.
+ *           (Nécessite le déploiement Vercel ; ne fonctionne pas en file://.)
  */
-const SIMULATE_SUBMISSION = true;
+const SIMULATE_SUBMISSION = false;
 
-/* Endpoint backend utilisé lorsque SIMULATE_SUBMISSION = false.
- * En déploiement Vercel, /api/candidature pointe vers api/candidature.js.
- */
-const SUBMIT_ENDPOINT = "/api/candidature";
+/* Endpoints backend (déploiement Vercel). */
+const SUBMIT_ENDPOINT = "/api/candidature"; // enregistrement des métadonnées
+const CV_UPLOAD_ENDPOINT = "/api/cv-upload"; // jeton d'upload direct du CV
+
+/* Version du client Vercel Blob chargée pour l'upload navigateur (doit rester
+ * alignée avec la dépendance @vercel/blob de package.json). */
+const BLOB_CLIENT_URL = "https://esm.sh/@vercel/blob@2.4.0/client";
 
 /* Exposition globale (le site n'utilise pas de bundler). */
 window.IMD_CONFIG = {
@@ -32,4 +36,6 @@ window.IMD_CONFIG = {
   CV_CONFIG,
   SIMULATE_SUBMISSION,
   SUBMIT_ENDPOINT,
+  CV_UPLOAD_ENDPOINT,
+  BLOB_CLIENT_URL,
 };
