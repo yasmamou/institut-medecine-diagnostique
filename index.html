@@ -53,26 +53,49 @@
     <!-- ===================== Hero ===================== -->
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-bg" aria-hidden="true">
-        <svg class="hero-grid" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice">
+        <!-- Lignes topographiques + réseau de territoires (sobre, évoque le Sud) -->
+        <svg class="hero-topo" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice">
           <defs>
-            <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
-              <path d="M48 0H0V48" fill="none" stroke="currentColor" stroke-width="0.6"/>
-            </pattern>
-            <radialGradient id="glow" cx="78%" cy="28%" r="55%">
-              <stop offset="0%" stop-color="#1d4ed8" stop-opacity="0.18"/>
-              <stop offset="100%" stop-color="#1d4ed8" stop-opacity="0"/>
+            <radialGradient id="halo" cx="76%" cy="22%" r="60%">
+              <stop offset="0%" stop-color="#2f6bff" stop-opacity="0.30"/>
+              <stop offset="55%" stop-color="#1b3a64" stop-opacity="0"/>
             </radialGradient>
+            <linearGradient id="topoStroke" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.05"/>
+            </linearGradient>
           </defs>
-          <rect width="1200" height="600" fill="url(#grid)"/>
-          <rect width="1200" height="600" fill="url(#glow)"/>
-          <!-- Tracé abstrait évoquant un signal / une coupe diagnostique -->
-          <path class="hero-line" d="M0 360 H300 l40 -120 l46 240 l38 -300 l44 360 l40 -180 H1200"
-                fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect width="1200" height="700" fill="url(#halo)"/>
+          <g fill="none" stroke="url(#topoStroke)" stroke-width="1.1">
+            <path d="M-40 250 C 260 180, 520 300, 760 230 S 1180 180, 1260 250"/>
+            <path d="M-40 320 C 260 250, 520 370, 760 300 S 1180 250, 1260 320"/>
+            <path d="M-40 390 C 260 320, 520 440, 760 370 S 1180 320, 1260 390"/>
+            <path d="M-40 460 C 260 390, 520 510, 760 440 S 1180 390, 1260 460"/>
+            <path d="M-40 530 C 260 460, 520 580, 760 510 S 1180 460, 1260 530"/>
+            <path d="M-40 600 C 260 530, 520 650, 760 580 S 1180 530, 1260 600"/>
+          </g>
+          <!-- Réseau de nœuds : territoires reliés -->
+          <g class="hero-net" stroke="#5b8bff" stroke-width="1" opacity="0.55">
+            <line x1="880" y1="150" x2="1010" y2="240"/>
+            <line x1="1010" y1="240" x2="940" y2="360"/>
+            <line x1="880" y1="150" x2="760" y2="250"/>
+            <line x1="940" y1="360" x2="800" y2="330"/>
+          </g>
+          <g class="hero-dots" fill="#8fb4ff">
+            <circle cx="880" cy="150" r="4"/>
+            <circle cx="1010" cy="240" r="5"/>
+            <circle cx="760" cy="250" r="3.5"/>
+            <circle cx="940" cy="360" r="4"/>
+            <circle cx="800" cy="330" r="3"/>
+          </g>
         </svg>
       </div>
 
       <div class="container hero-inner">
-        <p class="eyebrow">Projet territorial — Sud de la France</p>
+        <p class="eyebrow eyebrow-light">
+          <span class="eyebrow-dot" aria-hidden="true"></span>
+          Projet territorial — Sud de la France
+        </p>
         <h1 id="hero-title" class="hero-title" data-project-name>Institut de Médecine Diagnostique</h1>
         <p class="hero-subtitle">Rassembler les professionnels du diagnostic au service des territoires.</p>
         <p class="hero-text">
@@ -81,9 +104,15 @@
           la cardiologie diagnostique, l'innovation et la recherche.
         </p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="#candidature">Déposer ma candidature</a>
-          <a class="btn btn-ghost" href="#vision">Découvrir le projet</a>
+          <a class="btn btn-light" href="#candidature">Déposer ma candidature</a>
+          <a class="btn btn-outline-light" href="#vision">Découvrir le projet</a>
         </div>
+
+        <ul class="hero-highlights" role="list">
+          <li><span aria-hidden="true">◦</span> Territoires sous-dotés</li>
+          <li><span aria-hidden="true">◦</span> Recherche &amp; IA</li>
+          <li><span aria-hidden="true">◦</span> Agenda personnalisable</li>
+        </ul>
       </div>
     </section>
 
@@ -137,34 +166,60 @@
     <!-- ===================== 3. Pourquoi rejoindre ? ===================== -->
     <section class="section" id="rejoindre" aria-labelledby="rejoindre-title">
       <div class="container">
-        <p class="section-eyebrow">Engagement</p>
-        <h2 id="rejoindre-title" class="section-title">Pourquoi rejoindre l'Institut&nbsp;?</h2>
+        <p class="section-eyebrow">Pourquoi nous rejoindre</p>
+        <h2 id="rejoindre-title" class="section-title">Des arguments qui se comprennent d'un regard</h2>
+        <p class="section-lead section-lead-wide">
+          Un projet médical de territoire, dans un cadre de vie privilégié, ouvert à la recherche
+          et à l'intelligence artificielle, avec une organisation pensée pour les professionnels.
+        </p>
 
-        <div class="reasons-grid">
-          <article class="reason-card">
-            <span class="reason-index" aria-hidden="true">01</span>
+        <div class="adv-grid">
+          <article class="adv-card">
+            <span class="adv-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="26" height="26"><path d="M12 21s7-5.6 7-11a7 7 0 10-14 0c0 5.4 7 11 7 11z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+            </span>
+            <h3>Déserts médicaux</h3>
+            <p>Répondre à un besoin de santé réel dans des territoires sous-dotés, avec un impact concret.</p>
+          </article>
+
+          <article class="adv-card" data-accent="green">
+            <span class="adv-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="26" height="26"><circle cx="7" cy="7" r="2.6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M2 20l6-8 4 5 3-4 7 7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <h3>Cadre de vie &amp; nature</h3>
+            <p>Exercer dans le Sud de la France, entre mer, montagne et qualité de vie au quotidien.</p>
+          </article>
+
+          <article class="adv-card">
+            <span class="adv-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="26" height="26"><rect x="7" y="7" width="10" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 4v3M14 4v3M10 17v3M14 17v3M4 10h3M4 14h3M17 10h3M17 14h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </span>
+            <h3>IA &amp; recherche de pointe</h3>
+            <p>Participer à des projets d'imagerie, de recherche clinique et d'intelligence artificielle.</p>
+          </article>
+
+          <article class="adv-card" data-accent="green">
+            <span class="adv-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="26" height="26"><path d="M4 19V9m5 10V5m5 14v-7m5 7V11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M3 21h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </span>
+            <h3>Rémunération attractive</h3>
+            <p>Des conditions financières à la hauteur de l'engagement et des responsabilités confiées.</p>
+          </article>
+
+          <article class="adv-card">
+            <span class="adv-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="26" height="26"><rect x="3.5" y="5" width="17" height="15" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M8.5 14.5l2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <h3>Agenda personnalisable</h3>
+            <p>Organiser votre activité selon votre parcours professionnel et votre vie personnelle.</p>
+          </article>
+
+          <article class="adv-card">
+            <span class="adv-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="26" height="26"><path d="M4 20V8l8-4 8 4v12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M4 20h16M9 20v-5h6v5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="12" cy="9" r="1.4" fill="currentColor"/></svg>
+            </span>
             <h3>Organisation structurée</h3>
-            <p>Rejoindre une structure médicale organisée autour de projets territoriaux identifiés.</p>
-          </article>
-          <article class="reason-card">
-            <span class="reason-index" aria-hidden="true">02</span>
-            <h3>Activité modulable</h3>
-            <p>Participer à des organisations d'activité compatibles avec différents parcours professionnels et personnels.</p>
-          </article>
-          <article class="reason-card">
-            <span class="reason-index" aria-hidden="true">03</span>
-            <h3>Territoires</h3>
-            <p>Contribuer au développement de l'offre diagnostique dans le Sud de la France.</p>
-          </article>
-          <article class="reason-card">
-            <span class="reason-index" aria-hidden="true">04</span>
-            <h3>Recherche &amp; innovation</h3>
-            <p>Participer à des projets associant imagerie, enseignement, recherche clinique et intelligence artificielle.</p>
-          </article>
-          <article class="reason-card">
-            <span class="reason-index" aria-hidden="true">05</span>
-            <h3>Confidentialité</h3>
-            <p>Chaque prise de contact est traitée de manière confidentielle, sans engagement initial.</p>
+            <p>Une structure médicale coordonnée autour de projets territoriaux clairement identifiés.</p>
           </article>
         </div>
       </div>
